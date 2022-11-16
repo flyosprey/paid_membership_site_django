@@ -20,7 +20,7 @@
           <li>Scientific Studies Breakdown</li>
           <li>Weekly Members Only Email</li>
         </ul>
-        <a href=""><button type="button" class="btn btn-lg btn-block btn-outline-primary">Get started</button></a>
+        <a href="{% url 'checkout' %}?plan=monthly"><button type="button" class="btn btn-lg btn-block btn-outline-primary">Get started</button></a>
       </div>
     </div>
     <div class="card mb-4 shadow-sm">
@@ -35,7 +35,7 @@
           <li>Scientific Studies Breakdown</li>
           <li>Weekly Members Only Email</li>
         </ul>
-        <a href=""><button type="button" class="btn btn-lg btn-block btn-primary">Get started</button></a>
+        <a href="{% url 'checkout' %}?plan=yearly"><button type="button" class="btn btn-lg btn-block btn-primary">Get started</button></a>
       </div>
     </div>
   </div>
