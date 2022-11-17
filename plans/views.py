@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import stripe
 
-stripe.api_key = "sk_test_51KyBUjIBWo2GmTUWpsnFhvgPx2s84A59vBl3AQIkxHE7EjaW0j6vg7bRsz0gJaY4NbPaBK1NxHFqQo692gpxVoCr00j1N9hNZC "
+stripe.api_key = "sk_test_51KyBUjIBWo2GmTUWpsnFhvgPx2s84A59vBl3AQIkxHE7EjaW0" \
+                 "j6vg7bRsz0gJaY4NbPaBK1NxHFqQo692gpxVoCr00j1N9hNZC "
 
 
 def home(request):
@@ -33,18 +34,11 @@ def checkout(request):
     if request.method == "POST":
         return redirect("home")
     else:
-        plan = "monthly"
-        coupon = "none"
-        price = 1000
-        og_dollar = 10
-        coupon_dollar = 0
-        final_dollar = 10
+        plan, coupon = "monthly", "none"
+        price, og_dollar, coupon_dollar, final_dollar = 1000, 10, 0, 10
         if request.method == "GET" and "plan" in request.GET:
             if request.GET["plan"] == "yearly":
-                plan = "yearly"
-                price = 10000
-                og_dollar = 100
-                final_dollar = 100
+                plan, price, og_dollar, final_dollar = "yearly", 1000, 100, 100
         if request.method == "GET" and "coupon" in request.GET:
             if request.GET["coupon"].lower() in coupons:
                 coupon = request.GET["coupon"].lower()
