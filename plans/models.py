@@ -8,7 +8,7 @@ class FitnessPlan(models.Model):
     premium = models.BooleanField(default=True)
 
 
-class Customer(models.Model):
+class Customer1(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     stripe_id = models.CharField(max_length=255)
     stripe_subscription_id = models.CharField(max_length=255)
