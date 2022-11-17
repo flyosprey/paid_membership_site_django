@@ -91,7 +91,12 @@ def checkout(request):
 def settings(request):
     membership, cancel_at_period_end = False, False
     if request.method == "POST":
-        pass
+        subscription = stripe.Subscription.retrieve(request.user.customer1.stripe_subscription_id)
+        subscription.cancel_at_period_end = True
+        request.user.customer1.cancel_at_period_end = True
+        cancel_at_period_end = True
+        subscription.save()
+        request.user.customer1.save()
     else:
         try:
             if request.user.customer1.membership:
