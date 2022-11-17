@@ -36,6 +36,12 @@ def join(request):
 
 @login_required
 def checkout(request):
+    try:
+        if request.user.customer1.membership:
+            return redirect("settings")
+    except Customer1.DoesNotExist:
+        pass
+
     coupons = {"halloween": 31, "welcome": 10}
     if request.method == "POST":
         stripe_customer = stripe.Customer.create(email=request.user.email, source=request.POST["stripeToken"])
