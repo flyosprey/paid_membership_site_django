@@ -29,6 +29,7 @@ def join(request):
 
 @login_required
 def checkout(request):
+    coupons = {"halloween": 31, "welcome": 10}
     if request.method == "POST":
         return redirect("home")
     else:
@@ -44,6 +45,14 @@ def checkout(request):
                 price = 10000
                 og_dollar = 100
                 final_dollar = 100
+        if request.method == "GET" and "coupon" in request.GET:
+            if request.GET["coupon"].lower() in coupons:
+                coupon = request.GET["coupon"].lower()
+                percentage = coupons[coupon]
+                coupon_price = int((percentage / 100) * price)
+                price = price - coupon_price
+                coupon_dollar = str(coupon_price)[:-2] + "." + str(coupon_price)[-2:]
+                final_dollar = str(price)[:-2] + "." + str(price)[-2:]
         return render(request, 'plans/checkout.html', {"plan": plan, "coupon": coupon, "price": price,
                                                        "og_dollar": og_dollar, "coupon_dollar": coupon_dollar,
                                                        "final_dollar": final_dollar})
