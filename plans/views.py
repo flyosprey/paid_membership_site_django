@@ -19,6 +19,12 @@ def home(request):
 def plan(request, pk):
     plan = get_object_or_404(FitnessPlan, pk=pk)
     if plan.premium:
+        if request.user.is_authenticated:
+            try:
+                if request.user.customer1.membership:
+                    return render(request, 'plans/plan.html', {'plan': plan})
+            except Customer1.DoesNotExist:
+                return redirect('join')
         return redirect('join')
     else:
         return render(request, 'plans/plan.html', {'plan': plan})
