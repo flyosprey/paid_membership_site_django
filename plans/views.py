@@ -32,6 +32,21 @@ def join(request):
 def checkout(request):
     coupons = {"halloween": 31, "welcome": 10}
     if request.method == "POST":
+        stripe_customer = stripe.Customer.create(email=request.user.email, source=request.POST["stripeToken"])
+        plan = "price_1M4f6KIBWo2GmTUW6bdFj4mO"
+        if request.POST["plan"] == "yearly":
+            plan = "price_1M4f7LIBWo2GmTUWZ3hDsIAT"
+        if request.POST["coupon"] in coupons:
+            coupon_from_user = request.POST["coupon"].lower()
+            percentage = coupons[coupon_from_user]
+            try:
+                coupon = stripe.Coupon.create(duration="once", id=coupon_from_user, percent_off=percentage)
+            except:
+                pass
+            subscription = stripe.Subscription.create(customer=stripe_customer.id, items=[{"plan": plan}],
+                                                      coupon=coupon_from_user)
+        else:
+            subscription = stripe.Subscription.create(customer=stripe_customer.id, items=[{"plan": plan}])
         return redirect("home")
     else:
         plan, coupon = "monthly", "none"
