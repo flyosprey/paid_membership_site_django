@@ -89,7 +89,19 @@ def checkout(request):
 
 
 def settings(request):
-    return render(request, 'registration/settings.html')
+    membership, cancel_at_period_end = False, False
+    if request.method == "POST":
+        pass
+    else:
+        try:
+            if request.user.customer1.membership:
+                membership = True
+            if request.user.customer1.cancel_at_period_end:
+                cancel_at_period_end = True
+        except Customer1.DoesNotExist:
+            membership = False
+    return render(request, 'registration/settings.html', {"membership": membership,
+                                                          "cancel_at_period_end": cancel_at_period_end})
 
 
 class SignUp(generic.CreateView):
