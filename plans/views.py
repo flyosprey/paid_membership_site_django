@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import CustomSignupForm
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import FitnessPlan
+from .models import FitnessPlan, Customer1
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import stripe
@@ -47,13 +47,22 @@ def checkout(request):
                                                       coupon=coupon_from_user)
         else:
             subscription = stripe.Subscription.create(customer=stripe_customer.id, items=[{"plan": plan}])
+
+        customer = Customer1()
+        customer.user = request.user
+        customer.stripe_id = stripe_customer.id
+        customer.membership = True
+        customer.cancel_at_period_end = False
+        customer.stripe_subscription_id = subscription.id
+        customer.save()
+
         return redirect("home")
     else:
         plan, coupon = "monthly", "none"
         price, og_dollar, coupon_dollar, final_dollar = 1000, 10, 0, 10
         if request.method == "GET" and "plan" in request.GET:
             if request.GET["plan"] == "yearly":
-                plan, price, og_dollar, final_dollar = "yearly", 1000, 100, 100
+                plan, price, og_dollar, final_dollar = "yearly", 10000, 100, 100
         if request.method == "GET" and "coupon" in request.GET:
             if request.GET["coupon"].lower() in coupons:
                 coupon = request.GET["coupon"].lower()
